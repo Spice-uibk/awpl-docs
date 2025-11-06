@@ -28,21 +28,23 @@ config:
     retry_delay: "retry_delay"
     start_date: 'yyyy-mm-ddThh:mm:ssZ'
     end_date: 'yyyy-mm-ddThh:mm:ssZ'
+    is_paused_upon_creation: false | true
 ```
 
 #### Arguments
 
-| Name                       | Type     | Required | Default     | Description                                                                                        |
-|----------------------------|----------|----------|-------------|----------------------------------------------------------------------------------------------------|
-| `schedule`                 | string   | yes      | –           | Cron-style schedule or interval specifying when the pipeline should run. Allowed values: `@daily`. |
-| `catchup`                  | bool     | no       | false       | Whether the pipeline should catch up on missed runs.                                               |
-| `tags`                     | list     | no       | []          | Metadata tags to organize or categorize applications.                                              |
-| `default_args`             | object   | no       | {}          | Default arguments of an application.                                                               |
-| `default_args.owner`       | string   | no       | ""          | Identifier of the pipeline owner.                                                                  |
-| `default_args.retries`     | int      | no       | 0           | Number of times to retry failed tasks by default.                                                  |
-| `default_args.retry_delay` | string   | no       | 0m          | Delay between retries (e.g., `"5m"` for 5 minutes).                                                |
-| `default_args.start_date`  | string   | no       | immediately | Earliest time from which the pipeline can start executing (ISO 8601 format).                       |
-| `default_args.end_date`    | string   | no       | no end time | Latest time until which the pipeline is allowed to run (ISO 8601 format).                          |
+| Name                        | Type   | Required | Default     | Description                                                                                        |
+|-----------------------------|--------|----------|-------------|----------------------------------------------------------------------------------------------------|
+| `schedule`                  | string | yes      | –           | Cron-style schedule or interval specifying when the pipeline should run. Allowed values: `@daily`. |
+| `catchup`                   | bool   | no       | false       | Whether the pipeline should catch up on missed runs.                                               |
+| `tags`                      | list   | no       | []          | Metadata tags to organize or categorize applications.                                              |
+| `default_args`              | object | no       | {}          | Default arguments of an application.                                                               |
+| `default_args.owner`        | string | no       | ""          | Identifier of the pipeline owner.                                                                  |
+| `default_args.retries`      | int    | no       | 0           | Number of times to retry failed tasks by default.                                                  |
+| `default_args.retry_delay`  | string | no       | 0m          | Delay between retries (e.g., `"5m"` for 5 minutes).                                                |
+| `default_args.start_date`   | string | no       | immediately | Earliest time from which the pipeline can start executing (ISO 8601 format).                       |
+| `default_args.end_date`     | string | no       | no end time | Latest time until which the pipeline is allowed to run (ISO 8601 format).                          |
+| `is_paused_upon_creation`   | bool   | no       | false       | Specifies if the dag is paused when created for the first time.                                    |
 
 
 ### Task specific configuration
