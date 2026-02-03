@@ -10,6 +10,9 @@ nav_order: 1
 {: .important }
 AWPL relies on runtime-specific features to support advanced functionality, such as task-dependent branching, loop conditioning and data mappings. Users are encouraged to consult the [documentation of the target execution platform]({% link configuration/runtime.md %}) to understand how to use these features correctly.
 
+{: .tip }
+Download the [JSON Schema](schema.json) to validate your AWPL workflows.
+
 # AWPL
 
 AWPL (Abstract Workflow Pipeline Language) is a **declarative abstraction** for defining both batch and stream applications in a human-readable format using [YAML](https://yaml.org/). 
