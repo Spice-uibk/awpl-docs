@@ -51,7 +51,7 @@ nodes:
           operator: ">"
           negation: true
       branches:
-        true:
+        "true":
           - task:
               id: "t_2"
               task_config: {}
@@ -66,7 +66,7 @@ nodes:
               depends_on: 
                 - "t_2"
                 - "t_3"
-        false:
+        "false":
           - task:
               id: "t_5"
               task_config: {}

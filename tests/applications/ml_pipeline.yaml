@@ -1,43 +1,4 @@
 ---
-layout: default
-title: ML Pipeline
-parent: Examples
-nav_order: 5
----
-
-## ML Pipeline
-This example demonstrates an AWPL application that represents a typical machine learning pipeline. The pipeline performs data preprocessing, model training, evaluation, and conditional branching. It demonstrates tasks, loops, parallel execution (map), aggregation, and branching.
-
-### Steps
-- **`fetch_data`** – Fetches data and calculates an initial metric.
-
-- **`preprocessing_loop`** – Repeatedly runs `preprocessing` until `$loop_identifier_1.metric >= 0.8`. The loop variable is initialized from `fetch_data` and updated each iteration.
-
-- **`train_model`** – Trains the model on preprocessed data; depends on `preprocessing_loop`.
-
-- **`fetch_test_sets`** – Retrieves multiple test sets for evaluation.
-
-- **`evaluation_map`** – Runs `evaluate` on each test set in parallel; depends on `train_model` and `fetch_test_sets`.
-
-- **`aggregate_results`** – Aggregates evaluation outcomes and calculates the average; depends on `evaluation_map`.
-
-- **`result_branch`** – Conditional execution:
-   - If average > 0.86 → `advanced_task`
-   - Else → `basic_task`
-   Depends on `aggregate_results`.
-
-- **`finalize`** – Performs cleanup and outputs results; depends on `result_branch`.
-
-
-### Concepts
-- Looping until a metric threshold is met
-- Parallel evaluation with map
-- Conditional branching based on results 
-- Proper task dependencies to enforce execution order
-
-
-```yaml
----
 name: "ml_pipeline"
 runtime: "airflow"
 config:
@@ -133,4 +94,3 @@ nodes:
       task_config: {}
       depends_on:
         - "result_branch"
-```

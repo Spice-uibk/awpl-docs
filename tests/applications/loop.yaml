@@ -1,0 +1,42 @@
+---
+name: "loop"
+runtime: "airflow"
+config:
+  resource_hints: []
+  slo: []
+  runtime:
+    schedule: "@daily"
+nodes:
+  - task:
+      id: "t_1"
+      description: "The first task of the application."
+      task_config: {}           # using Airflow EmptyOperator
+      depends_on: []
+  - loop:
+      id: "loop_1"
+      description: "This is a sequential loop."
+      loop_data:
+        id: "loop_identifier_1"
+        init: "$t_1"
+        loop: "$t_3"
+      conditions:
+        - lhs: "$loop_identifier_1"
+          rhs: "10"
+          operator: "=="
+      body:
+        - task:
+            id: "t_2"
+            task_config: {}
+            depends_on: []
+        - task:
+            id: "t_3"
+            task_config: {}
+            depends_on:
+              - "t_2"
+      depends_on:
+        - "t_1"
+  - task:
+      id: "t_4"
+      task_config: {}
+      depends_on:
+        - "loop_1"
