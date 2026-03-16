@@ -1,0 +1,19 @@
+stages:
+  - test
+
+.python-base:
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install -r requirements-dev.txt
+  cache:
+    paths:
+      - .cache/pip
+
+test:python3.11:
+  extends: .python-base
+  stage: test
+  image: python:3.11
+  script:
+    - pytest -v tests/
+  coverage: '/TOTAL.*\s+(\d+%)$/'
