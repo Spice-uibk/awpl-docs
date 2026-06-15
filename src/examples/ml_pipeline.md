@@ -42,7 +42,6 @@ name: "ml_pipeline"
 runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
   runtime:
     schedule: "@daily"
     catchup: false

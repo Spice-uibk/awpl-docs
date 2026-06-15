@@ -14,7 +14,7 @@ graph LR
 | Component               | Description                                                 |
 |-------------------------|-------------------------------------------------------------|
 | **Language Constructs** | Tasks, loops, branches, and maps that define workflow logic |
-| **Configuration**       | Resource hints, SLOs, and runtime-specific settings         |
+| **Configuration**       | Resource hints and runtime-specific settings                |
 | **JSON Schema**         | validation `schema.json` for AWPL definitions               |
 
 

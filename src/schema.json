@@ -112,9 +112,6 @@
             },
             "resource_hints": {
               "$ref": "#/definitions/resourceHints"
-            },
-            "slo": {
-              "description": "Service-level objectives"
             }
           }
         }

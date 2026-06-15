@@ -24,7 +24,6 @@ name: "map"
 runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
   runtime:
     schedule: "@daily"
 nodes:
