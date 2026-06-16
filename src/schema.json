@@ -4,7 +4,7 @@
   "title": "AWPL Schema",
   "description": "JSON Schema for validating Abstract Workflow Pipeline Language (AWPL) applications",
   "type": "object",
-  "required": ["name", "runtime", "config"],
+  "required": ["name"],
   "properties": {
     "name": {
       "type": "string",
@@ -15,39 +15,25 @@
       "type": "string",
       "description": "Optional description providing context about the application."
     },
-    "runtime": {
-      "type": "string",
-      "description": "Execution environment",
-      "enum": ["airflow", "flink"]
-    },
     "config": {
       "type": "object",
       "description": "Application-specific configuration",
       "properties": {
-        "runtime": {
-          "type": "object",
-          "description": "Runtime-specific configuration"
+        "resource_hints": {
+          "$ref": "#/definitions/resourceHints"
+        },
+        "slo": {
+          "type": "array",
+          "description": "Service-level objectives"
+        },
+        "airflow": {
+          "$ref": "#/definitions/airflowConfig"
+        },
+        "flink": {
+          "$ref": "#/definitions/flinkConfig"
         }
       },
-      "required": ["runtime"],
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "runtime": {
-                "const": "airflow"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "runtime": {
-                "$ref": "#/definitions/airflowConfig"
-              }
-            }
-          }
-        }
-      ]
+      "additionalProperties": true
     },
     "nodes": {
       "type": "array",
@@ -112,6 +98,9 @@
             },
             "resource_hints": {
               "$ref": "#/definitions/resourceHints"
+            },
+            "slo": {
+              "description": "Service-level objectives"
             }
           }
         }
@@ -152,22 +141,12 @@
             },
             "branches": {
               "type": "object",
-              "required": ["true"],
-              "properties": {
-                "true": {
-                  "type": "array",
-                  "description": "Nodes to execute if condition is true",
-                  "items": {
-                    "$ref": "#/definitions/node"
-                  }
-                },
-                "false": {
-                  "type": "array",
-                  "description": "Nodes to execute if condition is false",
-                  "default": [],
-                  "items": {
-                    "$ref": "#/definitions/node"
-                  }
+              "minProperties": 1,
+              "maxProperties": 2,
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/node"
                 }
               }
             }
@@ -397,6 +376,25 @@
           "type": "boolean",
           "description": "Whether DAG is paused initially",
           "default": false
+        }
+      }
+    },
+    "flinkConfig": {
+      "type": "object",
+      "properties": {
+        "libraries": {
+          "type": "array",
+          "description": "Jar files to load into the classpath",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "parallelism": {
+          "type": "integer",
+          "description": "Default number of replicas per task",
+          "minimum": 1,
+          "default": 1
         }
       }
     },
