@@ -1,9 +1,8 @@
 ---
 name: "taskOnly"
-runtime: "airflow"
 config:
   resource_hints: []
-  runtime:
+  airflow:
     schedule: "@daily"
 nodes:
   - task:

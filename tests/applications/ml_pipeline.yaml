@@ -1,9 +1,8 @@
 ---
 name: "ml_pipeline"
-runtime: "airflow"
 config:
   resource_hints: []
-  runtime:
+  airflow:
     schedule: "@daily"
     catchup: false
     default_args:
@@ -20,6 +19,7 @@ nodes:
   - loop:
       id: "preprocessing_loop"
       description: "Runs until some metric > 0.8"
+      max_iters: 20
       loop_data:
         id: "loop_identifier_1"
         init: "$fetch_data.metric"
