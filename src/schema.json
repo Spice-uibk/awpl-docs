@@ -4,7 +4,8 @@
   "title": "AWPL Schema",
   "description": "JSON Schema for validating Abstract Workflow Pipeline Language (AWPL) applications",
   "type": "object",
-  "required": ["name", "runtime", "config"],
+  "required": ["name"],
+  "additionalProperties": false,
   "properties": {
     "name": {
       "type": "string",
@@ -15,39 +16,19 @@
       "type": "string",
       "description": "Optional description providing context about the application."
     },
-    "runtime": {
-      "type": "string",
-      "description": "Execution environment",
-      "enum": ["airflow", "flink"]
-    },
+    "context": { "$ref": "#/definitions/context" },
     "config": {
       "type": "object",
       "description": "Application-specific configuration",
+      "additionalProperties": false,
       "properties": {
-        "runtime": {
-          "type": "object",
-          "description": "Runtime-specific configuration"
+        "resource_hints": {
+          "$ref": "#/definitions/resourceHints"
+        },
+        "airflow": {
+          "$ref": "#/definitions/airflowConfig"
         }
-      },
-      "required": ["runtime"],
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "runtime": {
-                "const": "airflow"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "runtime": {
-                "$ref": "#/definitions/airflowConfig"
-              }
-            }
-          }
-        }
-      ]
+      }
     },
     "nodes": {
       "type": "array",
@@ -61,60 +42,57 @@
   "definitions": {
     "node": {
       "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task": { "$ref": "#/definitions/taskNode" },
+        "branch": { "$ref": "#/definitions/branchNode" },
+        "loop": { "$ref": "#/definitions/loopNode" },
+        "map": { "$ref": "#/definitions/mapNode" }
+      },
       "oneOf": [
-        {
-          "$ref": "#/definitions/taskNode"
-        },
-        {
-          "$ref": "#/definitions/branchNode"
-        },
-        {
-          "$ref": "#/definitions/loopNode"
-        },
-        {
-          "$ref": "#/definitions/mapNode"
-        }
+        { "required": ["task"] },
+        { "required": ["branch"] },
+        { "required": ["loop"] },
+        { "required": ["map"] }
       ]
     },
     "taskNode": {
       "type": "object",
-      "required": ["task"],
+      "required": ["id"],
+      "additionalProperties": false,
       "properties": {
-        "task": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description"
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "List of task/node IDs this depends on",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "context": { "$ref": "#/definitions/context" },
+        "task_config": {
           "type": "object",
-          "required": ["id", "task_config"],
+          "description": "Task-specific configuration",
+          "additionalProperties": false,
           "properties": {
-            "id": {
-              "type": "string",
-              "description": "Unique identifier",
-              "minLength": 1
-            },
-            "description": {
-              "type": "string",
-              "description": "Optional description"
-            },
-            "depends_on": {
-              "type": "array",
-              "description": "List of task/node IDs this depends on",
-              "default": [],
-              "items": {
-                "type": "string"
-              }
-            },
-            "task_config": {
-              "type": "object",
-              "description": "Task-specific configuration",
+            "airflow": {
+              "type": ["object", "null"],
+              "additionalProperties": false,
               "properties": {
-                "kubernetes_pod_operator": {
-                  "$ref": "#/definitions/kubernetesPodOperator"
-                }
+                "kubernetes_pod_operator": { "$ref": "#/definitions/kubernetesPodOperator" }
               }
             },
             "resource_hints": {
               "$ref": "#/definitions/resourceHints"
-            },
-            "slo": {
-              "description": "Service-level objectives"
             }
           }
         }
@@ -122,57 +100,55 @@
     },
     "branchNode": {
       "type": "object",
-      "required": ["branch"],
+      "required": ["id", "conditions", "branches"],
+      "additionalProperties": false,
       "properties": {
-        "branch": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description"
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "List of task/node IDs this depends on",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "List of condition objects",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/condition"
+          }
+        },
+        "context": { "$ref": "#/definitions/context" },
+        "branches": {
           "type": "object",
-          "required": ["id", "conditions", "branches"],
+          "required": ["true"],
+          "additionalProperties": false,
           "properties": {
-            "id": {
-              "type": "string",
-              "description": "Unique identifier",
-              "minLength": 1
-            },
-            "description": {
-              "type": "string",
-              "description": "Optional description"
-            },
-            "depends_on": {
-              "type": "array",
-              "description": "List of task/node IDs this depends on",
-              "default": [],
+            "false": {
+              "default": [
+              ],
+              "description": "Nodes to execute if condition is false",
               "items": {
-                "type": "string"
-              }
+                "$ref": "#/definitions/node"
+              },
+              "type": "array"
             },
-            "conditions": {
-              "type": "array",
-              "description": "List of condition objects",
-              "minItems": 1,
+            "true": {
+              "description": "Nodes to execute if condition is true",
               "items": {
-                "$ref": "#/definitions/condition"
-              }
-            },
-            "branches": {
-              "type": "object",
-              "required": ["true"],
-              "properties": {
-                "true": {
-                  "type": "array",
-                  "description": "Nodes to execute if condition is true",
-                  "items": {
-                    "$ref": "#/definitions/node"
-                  }
-                },
-                "false": {
-                  "type": "array",
-                  "description": "Nodes to execute if condition is false",
-                  "default": [],
-                  "items": {
-                    "$ref": "#/definitions/node"
-                  }
-                }
-              }
+                "$ref": "#/definitions/node"
+              },
+              "type": "array"
             }
           }
         }
@@ -180,112 +156,113 @@
     },
     "loopNode": {
       "type": "object",
-      "required": ["loop"],
+      "required": ["id", "conditions", "body", "max_iters"],
+      "additionalProperties": false,
       "properties": {
-        "loop": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description"
+        },
+        "max_iters": {
+          "type": "number",
+          "description": "Maximum iterations of the loop (loop unrolling)"
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "List of task/node IDs this depends on",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "loop_data": {
           "type": "object",
-          "required": ["id", "conditions", "body"],
+          "description": "Defines loop variable tracking",
+          "required": ["id", "init", "loop"],
+          "additionalProperties": false,
           "properties": {
             "id": {
               "type": "string",
-              "description": "Unique identifier",
+              "description": "Identifier for loop variable",
               "minLength": 1
             },
-            "description": {
+            "init": {
               "type": "string",
-              "description": "Optional description"
+              "description": "Reference to task/value for initialization",
+              "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
             },
-            "depends_on": {
-              "type": "array",
-              "description": "List of task/node IDs this depends on",
-              "default": [],
-              "items": {
-                "type": "string"
-              }
-            },
-            "loop_data": {
-              "type": "object",
-              "description": "Defines loop variable tracking",
-              "required": ["id", "init", "loop"],
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Identifier for loop variable",
-                  "minLength": 1
-                },
-                "init": {
-                  "type": "string",
-                  "description": "Reference to task/value for initialization",
-                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
-                },
-                "loop": {
-                  "type": "string",
-                  "description": "Reference to task that updates the variable",
-                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
-                }
-              }
-            },
-            "conditions": {
-              "type": "array",
-              "description": "Conditions for loop termination",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/condition"
-              }
-            },
-            "body": {
-              "type": "array",
-              "description": "Nodes executed in each iteration",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/node"
-              }
+            "loop": {
+              "type": "string",
+              "description": "Reference to task that updates the variable",
+              "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
             }
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Conditions for loop termination",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/condition"
+          }
+        },
+        "context": { "$ref": "#/definitions/context" },
+        "body": {
+          "type": "array",
+          "description": "Nodes executed in each iteration",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/node"
           }
         }
       }
     },
     "mapNode": {
       "type": "object",
-      "required": ["map"],
+      "required": ["id", "items"],
+      "additionalProperties": false,
       "properties": {
-        "map": {
-          "type": "object",
-          "required": ["id", "items", "body"],
-          "properties": {
-            "id": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description"
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "List of task/node IDs this depends on",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "items": {
+          "description": "Literal list or task reference returning a list",
+          "oneOf": [
+            {
               "type": "string",
-              "description": "Unique identifier",
-              "minLength": 1
+              "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
             },
-            "depends_on": {
-              "type": "array",
-              "description": "List of task/node IDs this depends on",
-              "default": [],
-              "items": {
-                "type": "string"
-              }
-            },
-            "items": {
-              "description": "Literal list or task reference returning a list",
-              "oneOf": [
-                {
-                  "type": "string",
-                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
-                },
-                {
-                  "type": "array"
-                }
-              ]
-            },
-            "body": {
-              "type": "array",
-              "description": "Nodes executed for each list element",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/node"
-              }
+            {
+              "type": "array"
             }
+          ]
+        },
+        "context": { "$ref": "#/definitions/context" },
+        "body": {
+          "type": "array",
+          "description": "Nodes executed for each list element",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/node"
           }
         }
       }
@@ -293,6 +270,7 @@
     "condition": {
       "type": "object",
       "required": ["lhs", "rhs", "operator"],
+      "additionalProperties": false,
       "properties": {
         "lhs": {
           "type": "string",
@@ -326,6 +304,7 @@
       "items": {
         "type": "object",
         "required": ["type"],
+        "additionalProperties": false,
         "properties": {
           "type": {
             "type": "string",
@@ -333,12 +312,12 @@
             "enum": ["cpu", "memory", "gpu", "storage"]
           },
           "min": {
-            "type": "string",
+            "type": "number",
             "description": "Minimum resource amount",
             "default": "0"
           },
           "max": {
-            "type": "string",
+            "type": "number",
             "description": "Maximum resource amount"
           }
         }
@@ -347,6 +326,7 @@
     "airflowConfig": {
       "type": "object",
       "required": ["schedule"],
+      "additionalProperties": false,
       "properties": {
         "schedule": {
           "type": "string",
@@ -369,6 +349,7 @@
           "type": "object",
           "description": "Default arguments",
           "default": {},
+          "additionalProperties": false,
           "properties": {
             "owner": {
               "type": "string",
@@ -403,9 +384,15 @@
         }
       }
     },
+    "context": {
+      "type": "object",
+      "description": "Flexible field for arbitrary key-value pairs (e.g., database references, custom flags).",
+      "additionalProperties": true
+    },
     "kubernetesPodOperator": {
       "type": "object",
       "required": ["name", "image"],
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
@@ -450,6 +437,7 @@
           "items": {
             "type": "object",
             "required": ["name", "claim_name"],
+            "additionalProperties": false,
             "properties": {
               "name": {
                 "type": "string"
@@ -467,6 +455,7 @@
           "items": {
             "type": "object",
             "required": ["name", "mount_path"],
+            "additionalProperties": false,
             "properties": {
               "name": {
                 "type": "string"
@@ -484,6 +473,7 @@
           "items": {
             "type": "object",
             "required": ["name", "value"],
+            "additionalProperties": false,
             "properties": {
               "name": {
                 "type": "string"

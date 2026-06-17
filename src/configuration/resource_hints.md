@@ -18,8 +18,8 @@ resource_hints:
 
 #### Arguments
 
-| Name  | Type    | Required | Default  | Description                                                                    |
-|-------|---------|----------|----------|--------------------------------------------------------------------------------|
-| `type`| string  | yes      | –        | The type of resource. Allowed values are: `cpu`, `memory`, `gpu`, `storage`.   |
-| `min` | string  | no       | 0        | Minimum amount of the resource expected for the task (e.g. `2`, `200Mi`).      |
-| `max` | string  | no       | infinity | Maximum amount of the resource that the task may use (e.g. `5`, `5GB`).        |
+| Name  | Type   | Required | Default  | Description                                                                                                          |
+|-------|--------|----------|----------|----------------------------------------------------------------------------------------------------------------------|
+| `type`| string | yes      | –        | The type of resource. Allowed values are: `cpu` (in millicores), `memory` (in mb), `gpu` (in mb), `storage` (in mb). |
+| `min` | number | no       | 0        | Minimum amount of the resource expected for the task (e.g. `2000`).                                                  |
+| `max` | number | no       | infinity | Maximum amount of the resource that the task may use (e.g. `5000`).                                                  |

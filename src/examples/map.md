@@ -21,11 +21,9 @@ This example shows how to use a map node in AWPL to apply a set of tasks in para
 ```yaml
 ---
 name: "map"
-runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
-  runtime:
+  airflow:
     schedule: "@daily"
 nodes:
   - task:

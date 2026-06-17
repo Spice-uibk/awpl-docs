@@ -39,11 +39,9 @@ This example demonstrates an AWPL application that represents a typical machine 
 ```yaml
 ---
 name: "ml_pipeline"
-runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
-  runtime:
+  airflow:
     schedule: "@daily"
     catchup: false
     default_args:

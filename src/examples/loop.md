@@ -23,11 +23,9 @@ This example illustrates how to use a loop in AWPL to repeatedly execute a set o
 ```yaml
 ---
 name: "loop"
-runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
-  runtime:
+  airflow:
     schedule: "@daily"
 nodes:
   - task:
@@ -38,6 +36,7 @@ nodes:
   - loop:
       id: "loop_1"
       description: "This is a sequential loop."
+      max_iters: 1000
       loop_data:
         id: "loop_identifier_1"
         init: "$t_1"

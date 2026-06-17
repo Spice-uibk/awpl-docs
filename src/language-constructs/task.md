@@ -31,5 +31,5 @@ task:
 | `id`              | string | yes      | –       | Unique identifier of the task.           |
 | `description`     | string | no       | ""      | Optional description of the task.        |
 | `depends_on`      | list   | no       | []      | List of task IDs this one depends on.    |
-| `task_config`     | object | yes      | -       | see [here]({% link configuration.md %}). |
+| `task_config`     | object | no       | -       | see [here]({% link configuration.md %}). |
 

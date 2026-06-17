@@ -10,7 +10,8 @@ nav_order: 1
 {: .important }
 To enable task-specific branching, loop iterations or map in AWPL, users **must** implement their tasks to push outputs via **Airflow XComs**. AWPL relies on this to evaluate conditions and determine the execution path in branches, loops and maps.
 
-##### `runtime`: "airflow"
+{: .note }
+In order to access the loop counter variable inside a loop body, an environmental variable with the name `AWPL_LOOP_DATA` will be injected.
 
 ### Application specific configuration
 
@@ -18,17 +19,18 @@ An application `config` in AWPL defines settings that apply to the application a
 
 ```yaml
 config:
-  schedule: "schedule"
-  catchup: false | true
-  tags:
-    - "tags"
-  default_args:
-    owner: "owner"
-    retries: retries
-    retry_delay: "retry_delay"
-    start_date: 'yyyy-mm-ddThh:mm:ssZ'
-    end_date: 'yyyy-mm-ddThh:mm:ssZ'
-    is_paused_upon_creation: false | true
+  airflow:
+    schedule: "schedule"
+    catchup: false | true
+    tags:
+      - "tags"
+    default_args:
+      owner: "owner"
+      retries: retries
+      retry_delay: "retry_delay"
+      start_date: 'yyyy-mm-ddThh:mm:ssZ'
+      end_date: 'yyyy-mm-ddThh:mm:ssZ'
+      is_paused_upon_creation: false | true
 ```
 
 #### Arguments
@@ -52,32 +54,33 @@ config:
 A `task_config` in AWPL allows customizing the behavior and execution environment of a task. It can include general options and runtime-specific configurations such as running the task in a Kubernetes pod.
 
 {: .note }
-If the `task_config` is empty (`{}`), AWPL will automatically use the Airflow **EmptyOperator** as a default. This operator acts as a no-op, allowing the task to participate in dependencies, branching, or workflow structure without executing any actual computation.
+If the `airflow` is empty (`{}`), AWPL will automatically use the Airflow **EmptyOperator** as a default. This operator acts as a no-op, allowing the task to participate in dependencies, branching, or workflow structure without executing any actual computation.
 
 ```yaml
 task_config:
-  kubernetes_pod_operator:
-    name: "name"
-    do_xcom_push: true | false
-    namespace: "namespace"
-    image: "image"
-    cmds:
-      - "cmd"
-    arguments:
-      - "argument"
-    volumes:
-      - name: "name"
-        claim_name: "claim_name"
-    volume_mounts:
-      - name: "name"
-        mount_path: "mount_path"
-    env_vars:
-      - name: "name"
-        value: "value"
-    image_pull_policy: "Always"
-    config_file: "~/.kube/config"
-    hostnetwork: true | false
-    skip_on_exit_code: 000
+  airflow:
+    kubernetes_pod_operator:
+      name: "name"
+      do_xcom_push: true | false
+      namespace: "namespace"
+      image: "image"
+      cmds:
+        - "cmd"
+      arguments:
+        - "argument"
+      volumes:
+        - name: "name"
+          claim_name: "claim_name"
+      volume_mounts:
+        - name: "name"
+          mount_path: "mount_path"
+      env_vars:
+        - name: "name"
+          value: "value"
+      image_pull_policy: "Always"
+      config_file: "~/.kube/config"
+      hostnetwork: true | false
+      skip_on_exit_code: 000
 ```
 
 #### Arguments

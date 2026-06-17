@@ -21,11 +21,9 @@ the **EmptyOperator**, which allows the workflow structure to be validated and e
 ```yaml
 ---
 name: "taskOnly"
-runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
-  runtime:
+  airflow:
     schedule: "@daily"
 nodes:
   - task:

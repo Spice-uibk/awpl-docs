@@ -29,7 +29,7 @@ branch:
       rhs: "rhs"
       operator: "operator"
       negation: true | false
-      combinedWith: "and/or"
+      combinedWith: "and | or"
   branches:
     true:
       - ...
