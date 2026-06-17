@@ -18,6 +18,7 @@ Each element from items is processed independently by the maps’s body.
 ```yaml
 map:
   id: "identifier"
+  description: "description"
   items: "items"
   body:
     - ...
@@ -27,11 +28,12 @@ map:
 
 #### Arguments
 
-| Name          | Type   | Required | Default | Description                                                                                     |
-|---------------|--------|----------|---------|-------------------------------------------------------------------------------------------------|
-| `id`          | string | yes      | –       | Unique identifier of the parallel loop node.                                                    |
-| `items`       | string | yes      | –       | A literal list of elements (e.g., `[1, 2, 3]`) or the output of another task (must be a list).  |
-| `body`        | list   | yes      | –       | List of nodes (tasks, branches, loops, parallel nodes) executed for each element in `items`.    |
-| `depends_on`  | list   | no       | []      | List of task or branch IDs that must complete before this parallel loop executes.               |
+| Name          | Type   | Required | Default | Description                                                                                    |
+|---------------|--------|----------|---------|------------------------------------------------------------------------------------------------|
+| `id`          | string | yes      | –       | Unique identifier of the map node.                                                             |
+| `description` | string | no       | ""      | Optional description explaining the purpose of the map node.                                   |
+| `items`       | string | yes      | –       | A literal list of elements (e.g., `[1, 2, 3]`) or the output of another task (must be a list). |
+| `body`        | list   | yes      | –       | List of nodes (tasks, branches, loops, parallel nodes) executed for each element in `items`.   |
+| `depends_on`  | list   | no       | []      | List of task or branch IDs that must complete before this parallel map executes.               |
 
 
