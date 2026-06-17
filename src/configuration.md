@@ -13,10 +13,9 @@ In AWPL, users can define custom configurations for their applications or tasks.
 ```yaml
 ---
 name: "name"
-runtime: "runtime"
 config:                       # application-specific configuration
   resource_hints: ...
-  runtime: ...
+  ...
 nodes:
   - task:
       id: "identifier"
