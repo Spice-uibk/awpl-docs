@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 {: .warning }
-> This is an initial version of **AWPL**. The syntax and features may change in the future.
+> This is version **1.0.0** of AWPL. The syntax and features may change in the future.
 
 {: .important }
 AWPL relies on runtime-specific features to support advanced functionality, such as task-dependent branching, loop conditioning and data mappings. Users are encouraged to consult the [documentation of the target execution platform]({% link configuration/runtime.md %}) to understand how to use these features correctly.
@@ -34,7 +34,6 @@ An **application** in AWPL defines a workflow or data pipeline, including its ba
 ---
 name: "name"
 description: "description"
-runtime: "runtime"
 config: ...
 nodes:
   - ...
@@ -46,6 +45,5 @@ nodes:
 |----------------|---------|----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `name`         | string  | yes      | –       | Unique name of the application.                                                                                                                                                                                                                                                   |
 | `description`  | string  | no       | ""      | Optional description providing context about the application.                                                                                                                                                                                                                     |
-| `runtime`      | string  | yes      | –       | Execution environment for the application (see [here]({% link configuration/runtime.md %})).                                                                                                                                                                                      |
-| `config`       | object  | yes      | -       | Application-specific configuration; see [here]({% link configuration.md %}).                                                                                                                                                                                                      |
+| `config`       | object  | no       | -       | Application-specific configuration; see [here]({% link configuration.md %}).                                                                                                                                                                                                      |
 | `nodes`        | list    | no       | []      | List of nodes that make up the application structure. Each node can be a [task]({% link language-constructs/task.md %}), [loop]({% link language-constructs/loop.md %}), [branche]({% link language-constructs/branching.md %}), or [map]({% link language-constructs/map.md %}). |
