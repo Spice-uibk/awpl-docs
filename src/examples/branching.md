@@ -30,11 +30,9 @@ branch is executed.
 ```yaml
 ---
 name: "branching"
-runtime: "airflow"
 config:
   resource_hints: []
-  slo: []
-  runtime:
+  airflow:
     schedule: "@daily"
 nodes:
   - task:
