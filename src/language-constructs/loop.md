@@ -21,6 +21,7 @@ The `loop_data` identifier can then be referenced in the loop’s condition to d
 loop:
   id: "identifier"
   description: "description"
+  max_iters: 1000
   loop_data:
     id: "loop_identifier"
     init: "task_outside_loop"
@@ -43,6 +44,7 @@ loop:
 |------------------|--------|----------|---------|--------------------------------------------------------------------------------------------------|
 | `id`             | string | yes      | –       | Unique identifier of the loop node.                                                              |
 | `description`    | string | no       | ""      | Optional description explaining the purpose of the loop.                                         |
+| `max_iters`       | number | yes      | -       | Maximum number of loop iterations used for loop unrolling.                                       |
 | `conditions`     | list   | yes      | –       | Defines when the loop continues or terminates. Conditions follow the same rules as for a branch. |
 | `loop_data`      | object | no       | –       | Defines data flow variables associated with the loop.                                            |
 | `loop_data.id`   | string | yes      | –       | Identifier for the loop variable.                                                                |
