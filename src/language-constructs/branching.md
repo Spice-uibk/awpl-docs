@@ -24,12 +24,12 @@ All other fields are similar to those of a [task]({% link language-constructs/ta
 branch:
   id: "identifier"
   description: "description"
+  combine_conditions_with: "or"
   conditions:
     - lhs: "lhs"
       rhs: "rhs"
       operator: "operator"
       negation: true | false
-      combinedWith: "and | or"
   branches:
     true:
       - ...
@@ -41,18 +41,18 @@ branch:
 
 #### Arguments
 
-| Name             | Type   | Required | Default | Description                                                                                                                          | 
-|------------------|--------|----------|---------|--------------------------------------------------------------------------------------------------------------------------------------|
-| `id`             | string | yes      | –       | Unique identifier of the branch node.                                                                                                |
-| `description`    | string | no       | ""      | Optional description explaining the purpose of this branch.                                                                          |
-| `conditions`     | list   | yes      | –       | List of individual conditions. Each condition compares a left-hand side (`lhs`) with a right-hand side (`rhs`) using an `operator`.  |
-| `lhs`            | string | yes      | –       | Left-hand side of a condition.                                                                                                       |
-| `rhs`            | string | yes      | –       | Right-hand side of a condition.                                                                                                      |
-| `operator`       | string | yes      | –       | Comparison operator to evaluate the condition, such as `>`, `<`, `==`.                                                               |
-| `negation`       | bool   | no       | false   | If true, negates the condition result.                                                                                               |
-| `combinedWith`   | string | no       | "and"   | Logical operator used to combine multiple conditions. Can be `and` or `or`.                                                          |
-| `branches`       | object | yes      | –       | Defines the downstream nodes to execute depending on the condition outcome. Contains `true` and `false` lists of nodes.              |
-| `branches.true`  | list   | yes      | []      | Downstream nodes to execute if the condition evaluates to `true`.                                                                    |
-| `branches.false` | list   | no       | []      | Downstream nodes to execute if the condition evaluates to `false`.                                                                   |
-| `depends_on`     | list   | no       | []      | List of task or branch IDs that must complete before this branch executes.                                                           |
+| Name                       | Type   | Required | Default | Description                                                                                                                          | 
+|----------------------------|--------|----------|---------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `id`                       | string | yes      | –       | Unique identifier of the branch node.                                                                                                |
+| `description`              | string | no       | ""      | Optional description explaining the purpose of this branch.                                                                          |
+| `conditions`               | list   | yes      | –       | List of individual conditions. Each condition compares a left-hand side (`lhs`) with a right-hand side (`rhs`) using an `operator`.  |
+| `lhs`                      | string | yes      | –       | Left-hand side of a condition.                                                                                                       |
+| `rhs`                      | string | yes      | –       | Right-hand side of a condition.                                                                                                      |
+| `operator`                 | string | yes      | –       | Comparison operator to evaluate the condition, such as `>`, `<`, `==`.                                                               |
+| `negation`                 | bool   | no       | false   | If true, negates the condition result.                                                                                               |
+| `combine_conditions_with`  | string | no       | "and"   | Logical operator used to combine multiple conditions. Can be `and` or `or`.                                                          |
+| `branches`                 | object | yes      | –       | Defines the downstream nodes to execute depending on the condition outcome. Contains `true` and `false` lists of nodes.              |
+| `branches.true`            | list   | yes      | []      | Downstream nodes to execute if the condition evaluates to `true`.                                                                    |
+| `branches.false`           | list   | no       | []      | Downstream nodes to execute if the condition evaluates to `false`.                                                                   |
+| `depends_on`               | list   | no       | []      | List of task or branch IDs that must complete before this branch executes.                                                           |
 

@@ -26,12 +26,12 @@ loop:
     id: "loop_identifier"
     init: "task_outside_loop"
     loop: "task_inside_loop"
+  combine_conditions_with: "operator"
   conditions:
     - lhs: "lhs"
       rhs: "rhs"
       operator: "operator"
       negation: true | false
-      combinedWith: "and/or"
   body:
     - ...
   depends_on:
