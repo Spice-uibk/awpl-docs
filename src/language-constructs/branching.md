@@ -15,7 +15,7 @@ A condition in AWPL follows these rules:
   - A literal value (e.g., `10`).
   - The output of a previous task by using its task identifier, prefixed with the special character `$` (e.g., `$task_1`). If the task produces a JSON object, dot notation (`.`) can be used to access a specific field or nested object (e.g., `$task_1.output.field`).
 - The `operator` must be one of: `>`, `<`, `>=`, `<=`, `==`, or `equals`.
-- `combinedWith` is used to combine multiple conditions using logical operators (`and` / `or`).
+- `combine_conditions_with` is used to combine multiple conditions using logical operators (`and` / `or`).
 - The `branches` field specifies which nodes (tasks, branches, loops, etc.) are executed depending on whether the condition evaluates to true or false. 
 
 All other fields are similar to those of a [task]({% link language-constructs/task.md %}) and follow the same conventions for identifiers, descriptions, and dependencies.
@@ -24,7 +24,7 @@ All other fields are similar to those of a [task]({% link language-constructs/ta
 branch:
   id: "identifier"
   description: "description"
-  combine_conditions_with: "or"
+  combine_conditions_with: "and | or"
   conditions:
     - lhs: "lhs"
       rhs: "rhs"

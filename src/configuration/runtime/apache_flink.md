@@ -7,12 +7,8 @@ nav_order: 2
 
 # Apache Flink
 
-## Restrictions
-
 {: .important }
-The flink runtime restricts the AWPL operators due to runtime limitations.
-
-The loop operator does not support the `loop_data` structure and asserts its absence to avoid unexpected behaviour. Loops always use the last iterations output as their input and cannot refer to an arbitrary tasks output. The same is true for the branch operator, which also forbids refering to any task except `$prev`. This same constraint is also true for the map operators input.
+The flink runtime restricts the AWPL operators due to runtime limitations. For instance, the loop operator does not support the `loop_data` structure and asserts its absence to avoid unexpected behavior. Loops always use the last iteration's output as their input and cannot refer to an arbitrary task's output. The same is true for the branch operator, which also forbids referring to any task except `$prev`. This same constraint is also true for the map operator's input.
 
 ## Application specific configuration
 
@@ -43,7 +39,7 @@ Flink operators are mapped to AWPL `tasks` and utilize a specific `task_config`.
 {: .note }
 `com.example.MySource` must be an implementation of [`Source<Type, Split, CheckpointState>`](https://nightlies.apache.org/flink/flink-docs-stable/api/java/org/apache/flink/api/connector/source/Source.html) and loaded into the classpath.
 
-A source can be specified in a variety of ways: `socket` allows connecting to a TCP socket (e.g. a `netcat` server started with `nc -l 8000`), `topic` allows specifying a kafka topic and `class` allows specifying a `Source` class that can be used for entirely custom sources. Exactly one of the three options must be specified.
+A source can be specified in a variety of ways: `socket` allows connecting to a TCP socket, `topic` allows specifying a Kafka topic, and `class` allows specifying a class that can be used for entirely custom sources. Exactly one of the three options must be specified.
 
 ```yaml
 task:
@@ -65,7 +61,7 @@ task:
 {: .note }
 The socket connector acts as a TCP client. It connects to the specified IP address and port and does not listen for requests.
 
-A sink can also be specified in a variety of ways: `stdout` outputs to the standard output stream, `socket` allows connecting to a TCP socket (e.g. a `netcat` server started with `nc -l 8000`), `topic` allows specifying a kafka topic and `class` allows specifying a `Sink` class that can be used for entirely custom sources. Exactly one of the four options must be specified. 
+A sink can also be specified in a variety of ways: `stdout` outputs to the standard output stream, `socket` allows connecting to a TCP socket, `topic` allows specifying a Kafka topic, and `class` allows specifying a `Sink` class that can be used for entirely custom sources. Exactly one of the four options must be specified.
 
 ```yaml
 task:

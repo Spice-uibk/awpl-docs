@@ -26,7 +26,7 @@ loop:
     id: "loop_identifier"
     init: "task_outside_loop"
     loop: "task_inside_loop"
-  combine_conditions_with: "operator"
+  combine_conditions_with: "and | or"
   conditions:
     - lhs: "lhs"
       rhs: "rhs"
@@ -40,17 +40,18 @@ loop:
 
 #### Arguments
 
-| Name             | Type   | Required | Default | Description                                                                                      |
-|------------------|--------|----------|---------|--------------------------------------------------------------------------------------------------|
-| `id`             | string | yes      | –       | Unique identifier of the loop node.                                                              |
-| `description`    | string | no       | ""      | Optional description explaining the purpose of the loop.                                         |
-| `max_iters`       | number | yes      | -       | Maximum number of loop iterations used for loop unrolling.                                       |
-| `conditions`     | list   | yes      | –       | Defines when the loop continues or terminates. Conditions follow the same rules as for a branch. |
-| `loop_data`      | object | no       | –       | Defines data flow variables associated with the loop.                                            |
-| `loop_data.id`   | string | yes      | –       | Identifier for the loop variable.                                                                |
-| `loop_data.init` | string | yes      | –       | Reference to a task or value used to initialize the loop variable.                               |
-| `loop_data.loop` | string | yes      | –       | Reference to a task inside the loop body that updates the loop variable.                         |
-| `body`           | list   | yes      | –       | List of nodes (tasks, branches, loops, parallel nodes) executed in each loop iteration.          |
-| `depends_on`     | list   | no       | []      | List of task or branch IDs that must complete before this loop executes.                         |
+| Name                      | Type   | Required | Default | Description                                                                                      |
+|---------------------------|--------|----------|---------|--------------------------------------------------------------------------------------------------|
+| `id`                      | string | yes      | –       | Unique identifier of the loop node.                                                              |
+| `description`             | string | no       | ""      | Optional description explaining the purpose of the loop.                                         |
+| `combine_conditions_with` | string | no       | "and"   | Logical operator used to combine multiple conditions.                                            |
+| `max_iters`               | number | yes      | -       | Maximum number of loop iterations used for loop unrolling.                                       |
+| `conditions`              | list   | yes      | –       | Defines when the loop continues or terminates. Conditions follow the same rules as for a branch. |
+| `loop_data`               | object | no       | –       | Defines data flow variables associated with the loop.                                            |
+| `loop_data.id`            | string | yes      | –       | Identifier for the loop variable.                                                                |
+| `loop_data.init`          | string | yes      | –       | Reference to a task or value used to initialize the loop variable.                               |
+| `loop_data.loop`          | string | yes      | –       | Reference to a task inside the loop body that updates the loop variable.                         |
+| `body`                    | list   | yes      | –       | List of nodes (tasks, branches, loops, parallel nodes) executed in each loop iteration.          |
+| `depends_on`              | list   | no       | []      | List of task or branch IDs that must complete before this loop executes.                         |
 
 
