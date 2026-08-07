@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="WnzCIQJFMxRRTs1O0rdn">
+    <mxGraphModel dx="825" dy="445" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;sketch=1;curveFitting=1;jiggle=2;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;br&gt;Input 1" vertex="1">
+          <mxGeometry height="80" width="80" x="100" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;sketch=1;curveFitting=1;jiggle=2;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;br&gt;Input 2" vertex="1">
+          <mxGeometry height="80" width="80" x="100" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-5" edge="1" parent="1" source="m1bunAIL8DSXsfbxSAKk-1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.001;entryY=0.465;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=light-dark(#00FF00,#00FF00);sketch=1;curveFitting=1;jiggle=2;" target="m1bunAIL8DSXsfbxSAKk-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="200" as="sourcePoint" />
+            <mxPoint x="440" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-6" edge="1" parent="1" source="m1bunAIL8DSXsfbxSAKk-2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.003;entryY=0.546;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#f8cecc;strokeColor=light-dark(#FF0000,#FF0000);gradientColor=#ea6b66;sketch=1;curveFitting=1;jiggle=2;" target="m1bunAIL8DSXsfbxSAKk-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="270" y="320" as="sourcePoint" />
+            <mxPoint x="320" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;sketch=1;curveFitting=1;jiggle=2;" value="&lt;br&gt;&lt;br&gt;Output" vertex="1">
+          <mxGeometry height="80" width="80" x="440" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=light-dark(#f8cecc, #ff909f);strokeColor=#b85450;sketch=1;curveFitting=1;jiggle=2;" value="&lt;span style=&quot;color: rgb(255, 255, 255);&quot;&gt;&lt;span style=&quot;color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;union&lt;/span&gt;&lt;/span&gt;&lt;/b&gt;&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-10" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;entryX=0.01;entryY=0.624;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#ffcd28;strokeColor=light-dark(#00FF00,#00FF00);gradientColor=#ffa500;flowAnimation=0;endFill=1;sketch=1;curveFitting=1;jiggle=2;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="339.2" y="201.32" as="sourcePoint" />
+            <mxPoint x="439.99999999999994" y="200.36" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1bunAIL8DSXsfbxSAKk-8" edge="1" parent="1" source="m1bunAIL8DSXsfbxSAKk-3" style="endArrow=async;html=1;rounded=0;entryX=-0.007;entryY=0.486;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#ffcd28;strokeColor=light-dark(#FF0000,#FF0000);gradientColor=#ffa500;flowAnimation=0;endFill=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;sketch=1;curveFitting=1;jiggle=2;exitX=1.025;exitY=0.494;exitDx=0;exitDy=0;exitPerimeter=0;" target="m1bunAIL8DSXsfbxSAKk-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="300" y="200.44" as="sourcePoint" />
+            <mxPoint x="440" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
