@@ -472,7 +472,7 @@
           "default": [],
           "items": {
             "type": "object",
-            "required": ["name", "value"],
+            "required": ["name"],
             "additionalProperties": false,
             "properties": {
               "name": {
@@ -480,8 +480,32 @@
               },
               "value": {
                 "type": "string"
+              },
+              "valueFrom": {
+                "type": "object",
+                "required": ["path", "secrets"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "secrets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
-            }
+            },
+            "oneOf": [
+              {
+                "required": ["value"]
+              },
+              {
+                "required": ["valueFrom"]
+              }
+            ]
           }
         },
         "image_pull_policy": {
