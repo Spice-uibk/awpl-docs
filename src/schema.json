@@ -27,6 +27,9 @@
         },
         "airflow": {
           "$ref": "#/definitions/airflowConfig"
+        },
+        "flink": {
+          "$ref": "#/definitions/flinkConfig"
         }
       }
     },
@@ -91,6 +94,38 @@
                 "kubernetes_pod_operator": { "$ref": "#/definitions/kubernetesPodOperator" }
               }
             },
+            "flink": {
+              "type": ["object", "null"],
+              "additionalProperties": false,
+              "properties": {
+                "source": { "$ref": "#/definitions/source" },
+                "sink": { "$ref": "#/definitions/sink" },
+                "key_by": {
+                  "type": "string"
+                },
+                "filter": { "$ref": "#/definitions/class_only_operator" },
+                "flat_map": { "$ref": "#/definitions/class_only_operator" },
+                "map": { "$ref": "#/definitions/class_only_operator" },
+                "process": { "$ref": "#/definitions/class_only_operator" },
+                "reduce": { "$ref": "#/definitions/class_only_operator" },
+                "window": { "$ref": "#/definitions/window" },
+                "window_all": { "$ref": "#/definitions/window_all" },
+                "window_apply": { "$ref": "#/definitions/class_only_operator" },
+                "connect": {
+                  "type": ["null", "object"],
+                  "additionalProperties": false
+                },
+                "co_map": { "$ref": "#/definitions/class_only_operator" },
+                "co_flat_map": { "$ref": "#/definitions/class_only_operator" },
+                "union": {
+                  "type": ["null", "object"],
+                  "additionalProperties": false
+                },
+                "window_join": { "$ref": "#/definitions/window_join" },
+                "interval_join": { "$ref": "#/definitions/interval_join" },
+                "timestamp": { "$ref": "#/definitions/class_only_operator" }
+              }
+            },
             "resource_hints": {
               "$ref": "#/definitions/resourceHints"
             }
@@ -120,6 +155,12 @@
             "type": "string"
           }
         },
+        "combine_conditions_with": {
+          "type": "string",
+          "description": "Logical operator for combining conditions",
+          "enum": ["and", "or"],
+          "default": "and"
+        },
         "conditions": {
           "type": "array",
           "description": "List of condition objects",
@@ -146,9 +187,24 @@
             "true": {
               "description": "Nodes to execute if condition is true",
               "items": {
-                "$ref": "#/definitions/node"
-              },
-              "type": "array"
+                "$ref": "#/definitions/condition"
+              }
+            },
+            "combine_conditions_with": {
+              "type": "string",
+              "description": "Logical operator for combining all conditions",
+              "enum": ["and", "or"]
+            },
+            "branches": {
+              "type": "object",
+              "minProperties": 1,
+              "maxProperties": 2,
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/node"
+                }
+              }
             }
           }
         }
@@ -196,12 +252,64 @@
               "description": "Reference to task/value for initialization",
               "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
             },
-            "loop": {
+            "depends_on": {
+              "type": "array",
+              "description": "List of task/node IDs this depends on",
+              "default": [],
+              "items": {
+                "type": "string"
+              }
+            },
+            "loop_data": {
+              "type": "object",
+              "description": "Defines loop variable tracking",
+              "required": ["id", "init", "loop"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier for loop variable",
+                  "minLength": 1
+                },
+                "init": {
+                  "type": "string",
+                  "description": "Reference to task/value for initialization",
+                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
+                },
+                "loop": {
+                  "type": "string",
+                  "description": "Reference to task that updates the variable",
+                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+                }
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "description": "Conditions for loop termination",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/condition"
+              }
+            },
+            "combine_conditions_with": {
               "type": "string",
-              "description": "Reference to task that updates the variable",
-              "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+              "description": "Logical operator for combining all conditions",
+              "enum": ["and", "or"]
+            },
+            "body": {
+              "type": "array",
+              "description": "Nodes executed in each iteration",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/node"
+              }
             }
           }
+        },
+        "combine_conditions_with": {
+          "type": "string",
+          "description": "Logical operator for combining conditions",
+          "enum": ["and", "or"],
+          "default": "and"
         },
         "conditions": {
           "type": "array",
@@ -289,12 +397,6 @@
           "type": "boolean",
           "description": "Whether to negate the condition",
           "default": false
-        },
-        "combinedWith": {
-          "type": "string",
-          "description": "Logical operator for combining with next condition",
-          "enum": ["and", "or"],
-          "default": "and"
         }
       }
     },
@@ -319,6 +421,23 @@
           "max": {
             "type": "number",
             "description": "Maximum resource amount"
+          }
+        }
+      }
+    },
+    "flinkConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parallelism": {
+          "type": "integer"
+        },
+        "libraries": {
+          "type": "array",
+          "description": "Libraries to be shaded into built jar files",
+          "default": [ ],
+          "items": {
+            "type": "string"
           }
         }
       }
@@ -527,6 +646,152 @@
         "skip_on_exit_code": {
           "type": "number",
           "description": "Exit code to treat as skipped"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "oneOf": [
+        { "required": ["topic"] },
+        { "required": ["socket"] },
+        { "required": ["class"] }
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string"
+        },
+        "socket": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        }
+      }
+    },
+    "sink": {
+      "type": "object",
+      "additionalProperties": false,
+      "oneOf": [
+        { "required": ["topic"] },
+        { "required": ["stdout"] },
+        { "required": ["socket"] },
+        { "required": ["class"] }
+      ],
+      "properties": {
+        "topic": {
+          "type": "string"
+        },
+        "stdout": {
+          "type": "null"
+        },
+        "socket": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        }
+      }
+    },
+    "class_only_operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "class" ],
+      "properties": {
+        "class": {
+          "type": "string"
+        }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "type", "size" ],
+      "properties": {
+        "time": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["tumbling", "sliding", "session"]
+        },
+        "size": {
+          "size": "integer"
+        },
+        "slide": {
+          "slide": "integer"
+        }
+      }
+    },
+    "window_all": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "type", "size" ],
+      "properties": {
+        "time": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["tumbling", "sliding", "session"]
+        },
+        "size": {
+          "size": "integer"
+        },
+        "slide": {
+          "slide": "integer"
+        }
+      }
+    },
+    "window_join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "left_key", "right_key", "type", "size", "class" ],
+      "properties": {
+        "left_key": {
+          "type": "string"
+        },
+        "right_key": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["tumbling", "sliding", "session"]
+        },
+        "size": {
+          "type": "integer"
+        },
+        "slide": {
+          "type": "integer"
+        },
+        "time": {
+          "type": "string",
+          "enum": ["event", "processing"]
+        },
+        "class": {
+          "type": "string"
+        }
+      }
+    },
+    "interval_join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "left_key", "right_key", "lower_bound", "upper_bound", "class"],
+      "properties": {
+        "left_key": {
+          "type": "string"
+        },
+        "right_key": {
+          "type": "string"
+        },
+        "lower_bound": {
+          "type": "integer"
+        },
+        "upper_bound": {
+          "type": "integer"
+        },
+        "class": {
+          "type": "string"
         }
       }
     }
