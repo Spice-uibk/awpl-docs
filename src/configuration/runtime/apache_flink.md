@@ -173,6 +173,9 @@ task:
 {: .warning }
 `window` is for [`KeyedStreams`](https://nightlies.apache.org/flink/flink-docs-stable/api/java/org/apache/flink/streaming/api/datastream/KeyedStream.html), use `window_all` for [`DataStreams`](https://nightlies.apache.org/flink/flink-docs-stable/api/java/org/apache/flink/streaming/api/datastream/DataStream.html)
 
+{: .note }
+`size` refers to the gap size when a session window is configured.
+
 ```yaml
 task:
   id: "window"
