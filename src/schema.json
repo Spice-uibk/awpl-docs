@@ -22,6 +22,9 @@
       "description": "Application-specific configuration",
       "additionalProperties": false,
       "properties": {
+        "modeswitches": {
+          "$ref": "#/definitions/modeswitches"
+        },
         "resource_hints": {
           "$ref": "#/definitions/resourceHints"
         },
@@ -91,7 +94,9 @@
               "type": ["object", "null"],
               "additionalProperties": false,
               "properties": {
-                "kubernetes_pod_operator": { "$ref": "#/definitions/kubernetesPodOperator" }
+                "kubernetes_pod_operator": { "$ref": "#/definitions/kubernetesPodOperator" },
+                "modeswitch": { "$ref": "#/definitions/modeswitch" },
+                "xcom": { "$ref": "#/definitions/xcom" }
               }
             },
             "flink": {
@@ -118,12 +123,13 @@
                 "co_map": { "$ref": "#/definitions/class_only_operator" },
                 "co_flat_map": { "$ref": "#/definitions/class_only_operator" },
                 "union": {
-                  "type": ["null", "object"],
+                  "type": ["null", "object", "boolean"],
                   "additionalProperties": false
                 },
                 "window_join": { "$ref": "#/definitions/window_join" },
                 "interval_join": { "$ref": "#/definitions/interval_join" },
-                "timestamp": { "$ref": "#/definitions/class_only_operator" }
+                "timestamp": { "$ref": "#/definitions/class_only_operator" },
+                "modeswitch": { "$ref": "#/definitions/modeswitch" }
               }
             },
             "resource_hints": {
@@ -415,13 +421,36 @@
           },
           "min": {
             "type": "number",
-            "description": "Minimum resource amount",
+            "description": "Minimum resource amount (cpu: cores, memory: MiB)",
             "default": "0"
           },
           "max": {
             "type": "number",
-            "description": "Maximum resource amount"
+            "description": "Maximum resource amount (cpu: cores, memory: MiB)"
           }
+        }
+      }
+    },
+    "modeswitches": {
+      "type": "array",
+      "description": "List of modeswitches",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/modeswitchCons"
+      }
+    },
+    "modeswitchCons": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "function": {
+          "type": "string"
         }
       }
     },
@@ -447,6 +476,11 @@
       "required": ["schedule"],
       "additionalProperties": false,
       "properties": {
+        "max_active_runs": {
+          "type": "integer",
+          "description": "The maximum number of concurrent executions of this dag",
+          "default": 1
+        },
         "schedule": {
           "type": "string",
           "description": "Cron-style schedule"
@@ -652,15 +686,11 @@
     "source": {
       "type": "object",
       "oneOf": [
-        { "required": ["topic"] },
         { "required": ["socket"] },
         { "required": ["class"] }
       ],
       "additionalProperties": false,
       "properties": {
-        "topic": {
-          "type": "string"
-        },
         "socket": {
           "type": "string"
         },
@@ -673,17 +703,13 @@
       "type": "object",
       "additionalProperties": false,
       "oneOf": [
-        { "required": ["topic"] },
         { "required": ["stdout"] },
         { "required": ["socket"] },
         { "required": ["class"] }
       ],
       "properties": {
-        "topic": {
-          "type": "string"
-        },
         "stdout": {
-          "type": "null"
+          "type": [ "null", "boolean" ]
         },
         "socket": {
           "type": "string"
@@ -791,6 +817,29 @@
           "type": "integer"
         },
         "class": {
+          "type": "string"
+        }
+      }
+    },
+    "xcom": {
+      "type": ["null", "object", "boolean"],
+      "additionalProperties": false
+    },
+    "modeswitch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "role", "part_of", "sink_name", "source_name" ],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "part_of": {
+          "type": "string"
+        },
+        "sink_name": {
+          "type": "string"
+        },
+        "source_name": {
           "type": "string"
         }
       }
