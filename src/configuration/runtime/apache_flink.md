@@ -39,7 +39,7 @@ Flink operators are mapped to AWPL `tasks` and utilize a specific `task_config`.
 {: .note }
 `com.example.MySource` must be an implementation of [`Source<Type, Split, CheckpointState>`](https://nightlies.apache.org/flink/flink-docs-stable/api/java/org/apache/flink/api/connector/source/Source.html) and loaded into the classpath.
 
-A source can be specified in a variety of ways: `socket` allows connecting to a TCP socket, `topic` allows specifying a Kafka topic, and `class` allows specifying a class that can be used for entirely custom sources. Exactly one of the three options must be specified.
+A source can be specified in a variety of ways: `socket` allows connecting to a TCP socket and `class` allows specifying a class that can be used for entirely custom sources. Exactly one of the two options must be specified.
 
 ```yaml
 task:
@@ -49,7 +49,6 @@ task:
     flink:
       source:
         socket: "127.0.0.1:8000"?
-        topic: "input-topic"?
         class: "com.example.MySource"?
 ```
 
@@ -61,7 +60,7 @@ task:
 {: .note }
 The socket connector acts as a TCP client. It connects to the specified IP address and port and does not listen for requests.
 
-A sink can also be specified in a variety of ways: `stdout` outputs to the standard output stream, `socket` allows connecting to a TCP socket, `topic` allows specifying a Kafka topic, and `class` allows specifying a `Sink` class that can be used for entirely custom sources. Exactly one of the four options must be specified.
+A sink can also be specified in a variety of ways: `stdout` outputs to the standard output stream, `socket` allows connecting to a TCP socket and `class` allows specifying a `Sink` class that can be used for entirely custom sources. Exactly one of the three options must be specified.
 
 ```yaml
 task:
@@ -73,7 +72,6 @@ task:
       sink:
         stdout: ?
         socket: "127.0.0.1:8000"?
-        topic: "output-topic"?
         class: "com.example.MySink"?
 ```
 
