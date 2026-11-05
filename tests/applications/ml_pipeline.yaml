@@ -73,13 +73,13 @@ nodes:
           operator: ">"
           negation: false
       branches:
-        "true":
+        True:
           - task:
               id: "advanced_task"
               description: "Runs an advanced task"
               task_config: {}
               depends_on: []
-        "false":
+        False:
           - task:
               id: "basic_task"
               description: "Runs a basic task"

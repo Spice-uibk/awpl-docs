@@ -33,6 +33,7 @@ An **application** in AWPL defines a workflow or data pipeline, including its ba
 ```yaml
 ---
 name: "name"
+display_name: "display_name"
 description: "description"
 config: ...
 nodes:
@@ -44,6 +45,7 @@ nodes:
 | Name           | Type    | Required | Default | Description                                                                                                                                                                                                                                                                       |
 |----------------|---------|----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `name`         | string  | yes      | –       | Unique name of the application.                                                                                                                                                                                                                                                   |
+| `display_name` | string  | no       | –       | Human readable display name.                                                                                                                                                                                                                                                      |
 | `description`  | string  | no       | ""      | Optional description providing context about the application.                                                                                                                                                                                                                     |
 | `config`       | object  | no       | -       | Application-specific configuration; see [here]({% link configuration.md %}).                                                                                                                                                                                                      |
 | `nodes`        | list    | no       | []      | List of nodes that make up the application structure. Each node can be a [task]({% link language-constructs/task.md %}), [loop]({% link language-constructs/loop.md %}), [branche]({% link language-constructs/branching.md %}), or [map]({% link language-constructs/map.md %}). |

@@ -12,6 +12,10 @@
       "description": "Unique name of the application",
       "minLength": 1
     },
+    "display_name": {
+      "type": "string",
+      "description": "An optional human readable displayname."
+    },
     "description": {
       "type": "string",
       "description": "Optional description providing context about the application."
@@ -72,9 +76,18 @@
           "description": "Unique identifier",
           "minLength": 1
         },
+        "display_name": {
+          "type": "string",
+          "description": "An optional human readable displayname."
+        },
         "description": {
           "type": "string",
           "description": "Optional description"
+        },
+        "runtime": {
+          "type": "string",
+          "enum": ["flink", "airflow"],
+          "description": "The runtime this task should run on."
         },
         "depends_on": {
           "type": "array",
@@ -149,6 +162,10 @@
           "description": "Unique identifier",
           "minLength": 1
         },
+        "display_name": {
+          "type": "string",
+          "description": "An optional human readable display name."
+        },
         "description": {
           "type": "string",
           "description": "Optional description"
@@ -178,39 +195,21 @@
         "context": { "$ref": "#/definitions/context" },
         "branches": {
           "type": "object",
-          "required": ["true"],
-          "additionalProperties": false,
+          "minProperties": 1,
+          "maxProperties": 3,
+          "propertyNames": {
+            "enum": [true, false, "description"]
+          },
           "properties": {
-            "false": {
-              "default": [
-              ],
-              "description": "Nodes to execute if condition is false",
-              "items": {
-                "$ref": "#/definitions/node"
-              },
-              "type": "array"
-            },
-            "true": {
-              "description": "Nodes to execute if condition is true",
-              "items": {
-                "$ref": "#/definitions/condition"
-              }
-            },
-            "combine_conditions_with": {
+            "description": {
               "type": "string",
-              "description": "Logical operator for combining all conditions",
-              "enum": ["and", "or"]
-            },
-            "branches": {
-              "type": "object",
-              "minProperties": 1,
-              "maxProperties": 2,
-              "additionalProperties": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/node"
-                }
-              }
+              "description": "Optional description for the branch group"
+            }
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/node"
             }
           }
         }
@@ -225,6 +224,10 @@
           "type": "string",
           "description": "Unique identifier",
           "minLength": 1
+        },
+        "display_name": {
+          "type": "string",
+          "description": "An optional human readable display name."
         },
         "description": {
           "type": "string",
@@ -258,56 +261,10 @@
               "description": "Reference to task/value for initialization",
               "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
             },
-            "depends_on": {
-              "type": "array",
-              "description": "List of task/node IDs this depends on",
-              "default": [],
-              "items": {
-                "type": "string"
-              }
-            },
-            "loop_data": {
-              "type": "object",
-              "description": "Defines loop variable tracking",
-              "required": ["id", "init", "loop"],
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Identifier for loop variable",
-                  "minLength": 1
-                },
-                "init": {
-                  "type": "string",
-                  "description": "Reference to task/value for initialization",
-                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$|^[^$].*$"
-                },
-                "loop": {
-                  "type": "string",
-                  "description": "Reference to task that updates the variable",
-                  "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
-                }
-              }
-            },
-            "conditions": {
-              "type": "array",
-              "description": "Conditions for loop termination",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/condition"
-              }
-            },
-            "combine_conditions_with": {
+            "loop": {
               "type": "string",
-              "description": "Logical operator for combining all conditions",
-              "enum": ["and", "or"]
-            },
-            "body": {
-              "type": "array",
-              "description": "Nodes executed in each iteration",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/node"
-              }
+              "description": "Reference to task that updates the loop variable",
+              "pattern": "^\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
             }
           }
         },
@@ -345,6 +302,10 @@
           "type": "string",
           "description": "Unique identifier",
           "minLength": 1
+        },
+        "display_name": {
+          "type": "string",
+          "description": "An optional human readable display name."
         },
         "description": {
           "type": "string",

@@ -18,6 +18,7 @@ Each task is uniquely identified by its `id` and can optionally include a `descr
 ```yaml
 task: 
   id: "identifier"
+  display_name: "display name"
   description: "description"
   depends_on:
     - "identifier"
@@ -26,10 +27,11 @@ task:
 
 #### Arguments
 
-| Name              | Type   | Required | Default | Description                              |
-|-------------------|--------|----------|---------|------------------------------------------|
-| `id`              | string | yes      | –       | Unique identifier of the task.           |
-| `description`     | string | no       | ""      | Optional description of the task.        |
-| `depends_on`      | list   | no       | []      | List of task IDs this one depends on.    |
-| `task_config`     | object | no       | -       | see [here]({% link configuration.md %}). |
+| Name              | Type   | Required | Default | Description                             |
+|-------------------|--------|----------|--------|------------------------------------------|
+| `id`              | string | yes      | –      | Unique identifier of the task.           |
+| `display_name`    | string | no       | ""     | Human readable display name.             |
+| `description`     | string | no       | ""     | Optional description of the task.        |
+| `depends_on`      | list   | no       | []     | List of task IDs this one depends on.    |
+| `task_config`     | object | no       | -      | see [here]({% link configuration.md %}). |
 
